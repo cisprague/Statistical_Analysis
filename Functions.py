@@ -15,7 +15,6 @@ IJ_List = np.array(
 [369, 416, 462, 517],
 [500, 575, 645, 733]])
 
-
 def ANOVA_2(IJ_List):
     '''
     IJ_List is a (I,J) shaped numpy array
@@ -68,12 +67,88 @@ def ANOVA_2_Table(IJ_List):
     ]
     print tabulate(table, headers = headers)
 
-def ANOVA_2_Plot(IJ_List):
-    results = ANOVA_2(IJ_List)
-    xibar = results[-2]
-    xjbar = results[-3]
-    plt.plot(xibar)
-    plt.plot(xjbar)
-    plt.show()
+IJK_List = np.array([[[ 61., 63.], [ 69., 69.], [ 67., 69.]],
+            [[ 67., 69.], [ 69., 74.], [ 69., 74.]],
+            [[ 65., 74.], [ 74., 72.], [ 74., 74.]]])
 
-ANOVA_2_Plot(IJ_List)
+def ANOVA_IJK(IJK_List):
+    '''
+    I = Number of factor A levels
+    J = Number of factor B levels
+    K = Number of observations at level (i,j)
+    IJK_List is a numpy array of shape (I,J,K)
+    '''
+    shape = np.shape(IJK_List)
+    I = shape[0]
+    J = shape[1]
+    K = shape[2]
+    dfi = I - 1
+    dfj = J - 1
+    dfij = dfi * dfj
+    dfe = I * J * (K - 1)
+    dft = I * J * K - 1
+    xibar = np.array([np.mean(IJK_List[i,:,:]) for i in range(I)])
+    xjbar = np.array([np.mean(IJK_List[:,j,:]) for j in range(J)])
+    xijbar = np.asarray([[
+        np.mean(IJK_List[i,j,:]) for j in range(J)
+        ] for i in range(I)])
+    xbar = np.mean(IJK_List)
+    SSA = np.sum([np.sum([np.sum([
+        (xibar[i] - xbar)**2 for k in range(K)
+        ]) for j in range(J)
+        ]) for i in range(I)
+        ])
+    SSB = np.sum([np.sum([np.sum([
+        (xjbar[j] - xbar)**2 for k in range(K)
+        ]) for j in range(J)
+        ]) for i in range(I)
+        ])
+    SSAB = np.sum([np.sum([np.sum([
+        (xijbar[i,j] - xibar[i] - xjbar[j] + xbar)**2 for k in range(K)
+        ]) for j in range(J)
+        ]) for i in range(I)
+        ])
+    SSE = np.sum([np.sum([np.sum([
+        (IJK_List[i,j,k] - xijbar[i,j])**2 for k in range(K)
+        ]) for j in range(J)
+        ]) for i in range(I)
+        ])
+    SST = np.sum([np.sum([np.sum([
+        (IJK_List[i,j,k] - xbar)**2 for k in range(K)
+        ]) for j in range(J)
+        ]) for i in range(I)
+        ])
+    MSA = SSA / float(dfi)
+    MSB = SSB / float(dfj)
+    MSAB = SSAB / float(dfij)
+    MSE = SSE / float(dfe)
+    fA = MSA / MSE
+    fB = MSB / MSE
+    fAB = MSAB / MSE
+    results = (
+    dfi, dfj, dfij, dfe, dft,
+    SSA, SSB, SSAB, SSE, SST,
+    MSA, MSB, MSAB, MSE,
+    fA, fB, fAB,
+    xibar, xjbar, xbar)
+    return results
+
+def ANOVA_IJK_Table(IJK_List):
+    (dfi, dfj, dfij, dfe, dft,
+    SSA, SSB, SSAB, SSE, SST,
+    MSA, MSB, MSAB, MSE,
+    fA, fB, fAB,
+    xibar, xjbar, xbar) = ANOVA_IJK(IJK_List)
+    headers = [
+    'Source of Variation', 'df', 'Sum of Squares', 'Mean Square', 'f'
+    ]
+    table = [
+    ['Factor A', dfi, SSA, MSA, fA],
+    ['Factor B', dfj, SSB, MSB, fB],
+    ['Factor AB', dfij, SSAB, MSAB, fAB],
+    ['Error',    dfe, SSE, MSE, ''],
+    ['Total',    dft, SST, '',  '']
+    ]
+    print tabulate(table, headers = headers)
+
+ANOVA_IJK_Table(IJK_List)
