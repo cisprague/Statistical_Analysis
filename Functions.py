@@ -171,4 +171,37 @@ def ANOVA_IJK_Table(IJK_List):
              ['Total',     dft,  SST,  '',   '' ]]
     print tabulate(table, headers = headers)
 
-ANOVA_IJK_Table(IJK_List)
+x_list = np.array([99.0 , 101.1, 102.7, 103.0, 105.4,
+                   107.0, 108.7, 110.8, 112.1, 112.4,
+                   113.6, 113.8, 115.1, 115.4, 120.0])
+y_list = np.array([28.8 , 27.9 , 27.0 , 25.2 , 22.8,
+                   21.5 , 20.9 , 19.6 , 17.1 , 18.9,
+                   16.0 , 16.7 , 13.0 , 13.6 , 10.8 ])
+
+def Linear_Regression_Eq(x_list, y_list, verbose = False):
+    '''
+    x_list and y_list are cooresponding arrays
+    of 1 dimensional shape and common length N.
+
+    x_list = [x_n, x_n+1, ..., x_N]
+    y_list = [y_n, y_n+1, ..., y_N]
+    '''
+    (slope, intercept,
+    r_value, p_value,
+    std_err) = stats.linregress(x_list, y_list)
+    if verbose == False:
+        return slope, intercept
+    else:
+        print('y = ' + str(intercept) + ' ' + str(slope) + ' x')
+
+def Linear_Regression_Plot(x_list, y_list):
+    plt.plot(x_list, y_list, 'o')
+    x = np.linspace(min(x_list), max(x_list), 200)
+    slope, intercept = Linear_Regression_Eq(x_list, y_list)
+    y = intercept + slope * x
+    plt.plot(x, y)
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.show()
+
+Linear_Regression_Plot(x_list, y_list)
