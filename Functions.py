@@ -169,7 +169,7 @@ y_list = np.array([28.8 , 27.9 , 27.0 , 25.2 , 22.8,
                    21.5 , 20.9 , 19.6 , 17.1 , 18.9,
                    16.0 , 16.7 , 13.0 , 13.6 , 10.8 ])
 
-def Linear_Regression_Eq(x_list, y_list, verbose = False):
+def Linear_Regression(x_list, y_list, verbose = False):
     '''
     x_list and y_list are cooresponding arrays
     of 1 dimensional shape and common length N.
@@ -180,19 +180,32 @@ def Linear_Regression_Eq(x_list, y_list, verbose = False):
     (slope , intercept,
     r_value, p_value,
     std_err) = stats.linregress(x_list, y_list)
+    cor_coef = stats.pearsonr(x_list, y_list)[0]
     if verbose == False:
-        return slope, intercept
+        return slope, intercept, r_value, cor_coef
     else:
-        print('y = ' + str(intercept) + ' ' + str(slope) + ' x')
+        print('y = ' + str(intercept) + ' + ' + str(slope) + 'x')
 
 def Linear_Regression_Plot(x_list, y_list):
     plt.plot(x_list, y_list, 'o')
+    (slope, intercept,
+    r_value, cor_coef) = Linear_Regression(x_list, y_list)
     x = np.array([min(x_list), max(x_list)])
     y = intercept + slope * x
-    slope, intercept = Linear_Regression_Eq(x_list, y_list)
     plt.plot(x, y)
-    plt.xlabel('x')
-    plt.ylabel('y')
+    plt.xlabel('$x$')
+    plt.ylabel('$y$')
+    plt.title('$y=%f+%fx$\n$R^2=%f$ | $Correlation=%f$'
+               %(intercept, slope, r_value**2, cor_coef))
     plt.show()
 
+x_list = np.array([89.0, 177.0, 189.0, 354.0, 362.0, 442.0, 965.0])
+y_list = np.array([0.40, 0.60 , 0.48 , 0.66 , 0.61 , 0.69 , 0.99 ])
+
+x_list = np.array([46  , 48  , 55  , 57  , 60  , 72  , 81  , 85  , 94  ,
+                   109 , 121 , 132 , 137 , 148 , 149 , 184 , 185 , 187 ])
+y_list = np.array([2.18, 2.10, 2.13, 2.28, 2.34, 2.53, 2.28, 2.62, 2.63,
+                   2.50, 2.66, 2.79, 2.80, 3.01, 2.98, 3.34, 3.49, 3.26])
+
 Linear_Regression_Plot(x_list, y_list)
+print Linear_Regression(x_list,y_list)
