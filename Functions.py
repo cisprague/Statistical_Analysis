@@ -208,4 +208,3 @@ y_list = np.array([2.18, 2.10, 2.13, 2.28, 2.34, 2.53, 2.28, 2.62, 2.63,
                    2.50, 2.66, 2.79, 2.80, 3.01, 2.98, 3.34, 3.49, 3.26])
 
 Linear_Regression_Plot(x_list, y_list)
-print Linear_Regression(x_list,y_list)
