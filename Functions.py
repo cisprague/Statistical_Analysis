@@ -55,31 +55,25 @@ def ANOVA_2(IJ_List):
     MSE     = SSE / dfe
     fA      = MSA / MSE
     fB      = MSB / MSE
-    results = (
-            dfi,   dfj,   dfe,   dft,
-            SSA,   SSB,   SSE,   SST,
-            MSA,   MSB,   MSE,
-            fA,    fB,
-            xibar, xjbar, xbar)
+    results = (dfi  , dfj  , dfe, dft,
+               SSA  , SSB  , SSE, SST,
+               MSA  , MSB  , MSE,
+               fA   , fB   ,
+               xibar, xjbar, xbar)
     return results
 
 def ANOVA_2_Table(IJ_List):
-    (
-    dfi,   dfj,   dfe,   dft,
-    SSA,   SSB,   SSE,   SST,
-    MSA,   MSB,   MSE,
-    fA,    fB,
-    xibar, xjbar, xbar
-    )       = ANOVA_2(IJ_List)
-    headers = [
-    'Source of Variation', 'df', 'Sum of Squares', 'Mean Square', 'f'
-    ]
-    table = [
-    ['Factor A', dfi, SSA, MSA, fA],
-    ['Factor B', dfj, SSB, MSB, fB],
-    ['Error',    dfe, SSE, MSE, ''],
-    ['Total',    dft, SST, '',  '']
-    ]
+    (dfi  , dfj  , dfe,  dft,
+     SSA  , SSB  , SSE,  SST,
+     MSA  , MSB  , MSE,
+     fA   , fB   ,
+     xibar, xjbar, xbar) = ANOVA_2(IJ_List)
+    headers = ['Source of Variation', 'df',
+               'Sum of Squares'     , 'Mean Square', 'f']
+    table = [['Factor A', dfi, SSA, MSA, fA],
+             ['Factor B', dfj, SSB, MSB, fB],
+             ['Error'   , dfe, SSE, MSE, ''],
+             ['Total'   , dft, SST, '' , '']]
     print tabulate(table, headers = headers)
 
 IJK_List = np.array([[[ 61., 63.], [ 69., 69.], [ 67., 69.]],
@@ -146,29 +140,26 @@ def ANOVA_IJK(IJK_List):
     fA      =  MSA  / MSE
     fB      =  MSB  / MSE
     fAB     =  MSAB / MSE
-    results = (dfi,   dfj,   dfij,   dfe,   dft,
-               SSA,   SSB,   SSAB,   SSE,   SST,
-               MSA,   MSB,   MSAB,   MSE,
-               fA,    fB,    fAB,
+    results = (dfi  , dfj  , dfij,  dfe,  dft,
+               SSA  , SSB  , SSAB,  SSE,  SST,
+               MSA  , MSB  , MSAB,  MSE,
+               fA   , fB   , fAB ,
                xibar, xjbar, xbar)
     return results
 
 def ANOVA_IJK_Table(IJK_List):
-    (
-    dfi,    dfj,    dfij,    dfe,    dft,
-    SSA,    SSB,    SSAB,    SSE,    SST,
-    MSA,    MSB,    MSAB,    MSE,
-    fA,     fB,     fAB,
-    xibar,  xjbar,  xbar
-    ) = ANOVA_IJK(IJK_List)
-    headers = [
-    'Source of Variation', 'df', 'Sum of Squares', 'Mean Square', 'f'
-    ]
-    table = [['Factor A',  dfi,  SSA,  MSA,  fA ],
-             ['Factor B',  dfj,  SSB,  MSB,  fB ],
+    (dfi  , dfj  , dfij,  dfe,  dft,
+     SSA  , SSB  , SSAB,  SSE,  SST,
+     MSA  , MSB  , MSAB,  MSE,
+     fA   , fB   , fAB ,
+     xibar, xjbar, xbar) = ANOVA_IJK(IJK_List)
+    headers = ['Source of Variation', 'df',
+               'Sum of Squares'     , 'Mean Square', 'f']
+    table = [['Factor A' , dfi , SSA , MSA , fA ],
+             ['Factor B' , dfj , SSB , MSB , fB ],
              ['Factor AB', dfij, SSAB, MSAB, fAB],
-             ['Error',     dfe,  SSE,  MSE,  '' ],
-             ['Total',     dft,  SST,  '',   '' ]]
+             ['Error'    , dfe , SSE , MSE , '' ],
+             ['Total'    , dft , SST , ''  , '' ]]
     print tabulate(table, headers = headers)
 
 x_list = np.array([99.0 , 101.1, 102.7, 103.0, 105.4,
@@ -186,7 +177,7 @@ def Linear_Regression_Eq(x_list, y_list, verbose = False):
     x_list = [x_n, x_n+1, ..., x_N]
     y_list = [y_n, y_n+1, ..., y_N]
     '''
-    (slope, intercept,
+    (slope , intercept,
     r_value, p_value,
     std_err) = stats.linregress(x_list, y_list)
     if verbose == False:
@@ -196,9 +187,9 @@ def Linear_Regression_Eq(x_list, y_list, verbose = False):
 
 def Linear_Regression_Plot(x_list, y_list):
     plt.plot(x_list, y_list, 'o')
-    x = np.linspace(min(x_list), max(x_list), 200)
-    slope, intercept = Linear_Regression_Eq(x_list, y_list)
+    x = np.array([min(x_list), max(x_list)])
     y = intercept + slope * x
+    slope, intercept = Linear_Regression_Eq(x_list, y_list)
     plt.plot(x, y)
     plt.xlabel('x')
     plt.ylabel('y')
