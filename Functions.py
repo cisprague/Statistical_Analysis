@@ -207,4 +207,31 @@ x_list = np.array([46  , 48  , 55  , 57  , 60  , 72  , 81  , 85  , 94  ,
 y_list = np.array([2.18, 2.10, 2.13, 2.28, 2.34, 2.53, 2.28, 2.62, 2.63,
                    2.50, 2.66, 2.79, 2.80, 3.01, 2.98, 3.34, 3.49, 3.26])
 
-Linear_Regression_Plot(x_list, y_list)
+two_way_table = np.array([[409, 11, 22, 7 , 277],
+                          [512, 4 , 14, 11, 220]])
+
+def Two_Way_Contingency_Chi2_Stat(two_way_table):
+    '''
+    Tests whether the null hypothesis of homogeneity
+    is true.
+
+    two_way_table is a numpy array of shape (I,J):
+    [n_i,j   n_i,j+1   ... n_i,J   ]
+    [n_i+1,j n_i+1,j+1 ... n_i+1, J]
+    [:       :         ... :       ]
+    [n_I,j   n_I,j+1   ... n_I,J   ]
+    '''
+    nij  = two_way_table.astype(np.float64)
+    I, J = np.shape(nij)
+    ni   = [np.sum(nij[i,:]) for i in range(I)]
+    nj   = [np.sum(nij[:,j]) for j in range(J)]
+    n    = np.sum(nij)
+    eij  = np.array([[(ni[i] * nj[j]) / n
+        for j in range(J)]
+        for i in range(I)])
+    chi2 = np.sum([np.sum([
+        (nij[i,j] - eij[i,j])**2 / eij[i,j]
+        for j in range(J)])
+        for i in range(I)])
+    return chi2
+print Two_Way_Contingency_Chi2_Stat(two_way_table)
