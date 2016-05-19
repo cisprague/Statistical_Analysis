@@ -234,4 +234,27 @@ def Two_Way_Contingency_Chi2_Stat(two_way_table):
         for j in range(J)])
         for i in range(I)])
     return chi2
-print Two_Way_Contingency_Chi2_Stat(two_way_table)
+
+data = np.array([30.6, 30.1, 15.6, 26.7, 27.1, 25.4, 35.0, 30.8,
+                 31.9, 53.2, 12.5, 23.2, 8.8 , 24.9, 30.2])
+mu0 = 30.0
+
+def Wilcoxon_Test_Stat(data, mu0):
+    '''
+    Returns the Wilcoxon test statistic,
+    the sum of ranks associated with
+    positive (x_i - mu0), where x_i is
+    an individual data item and mu0 is
+    the hypothesised true average.
+    '''
+    data       = data - mu0
+    abs_mag    = np.sort(np.absolute(data))
+    data       = np.ndarray.tolist(data)
+    abs_mag    = np.ndarray.tolist(abs_mag)
+    s          = 0
+    for d in data:
+        if d  >= 0.0:
+            s += abs_mag.index(d) + 1
+    return s
+
+print Wilcoxon_Test_Stat(data, mu0)
