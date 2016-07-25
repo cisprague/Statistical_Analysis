@@ -1,7 +1,7 @@
 #Statistical Analysis
 Various tools for statistical analysis.
 
-##It's as easy as this
+## It's as easy as this
 ```python
 x_list = np.array([46  , 48  , 55  , 57  , 60  , 72  , 81  , 85  , 94  ,
                    109 , 121 , 132 , 137 , 148 , 149 , 184 , 185 , 187 ])
