@@ -1,4 +1,4 @@
-# Description
+## Description
 Various tools for statistical analysis.
 
 ## It's as easy as this
